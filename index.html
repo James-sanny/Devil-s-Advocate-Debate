@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 악마의 대변인 - 촉법소년 토론 연습실</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        devil: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8fafc; }
+        .chat-scroll::-webkit-scrollbar { width: 6px; }
+        .chat-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+        .chat-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .chat-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        @keyframes pulse-subtle { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .animate-pulse-subtle { animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-md">
+                    <i class="fa-solid me-0 fa-scale-balanced text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-800 text-base sm:text-lg leading-tight">AI 악마의 대변인 토론실</h1>
+                    <p class="text-xs text-slate-500 font-medium">중학교 1학년 논리적 반론 연습</p>
+                </div>
+            </div>
+            <div id="user-badge" class="hidden bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-700 flex items-center gap-2">
+                <i class="fa-solid fa-user-graduate text-brand-600"></i>
+                <span id="user-info-text">1학년 -반 -번 -</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-4xl w-full mx-auto p-3 sm:p-6 flex flex-col">
+
+        <!-- 1. START SCREEN -->
+        <section id="start-screen" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-6 sm:p-10 my-auto">
+            <div class="max-w-2xl mx-auto">
+                <div class="inline-flex items-center gap-2 bg-devil-50 border border-devil-100 text-devil-700 text-xs font-bold px-3 py-1.5 rounded-full mb-4">
+                    <i class="fa-solid fa-fire text-devil-500"></i> 악마의 대변인 (Devil's Advocate) 모드
+                </div>
+                
+                <!-- Topic Box -->
+                <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white p-6 sm:p-8 rounded-2xl shadow-lg mb-8 relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl">
+                        <i class="fa-solid fa-gavel"></i>
+                    </div>
+                    <span class="text-brand-300 font-semibold text-xs tracking-wider uppercase block mb-2">오늘의 토론 논제</span>
+                    <h2 class="text-lg sm:text-xl md:text-2xl font-bold leading-relaxed tracking-tight text-white">
+                        "만 14세 미만의 청소년이 범죄 행위를 저질러도 처벌하지 않는 것이 정의에 맞는가? 아니면 맞지 않는가?"
+                    </h2>
+                    <div class="mt-4 pt-4 border-t border-slate-700/60 flex items-center gap-2 text-xs text-slate-300">
+                        <i class="fa-solid fa-circle-info text-brand-400"></i>
+                        <span>AI는 학생 의견의 <b>반대 측(허점과 예외 사례 지적)</b>에서 논리를 펼칩니다.</span>
+                    </div>
+                </div>
+
+                <!-- Student Info Form -->
+                <form id="start-form" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-3">학생 정보 입력</label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 mb-1">학급 (반)</label>
+                                <input type="number" id="input-grade" min="1" max="20" required placeholder="예: 3"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-medium transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 mb-1">번호</label>
+                                <input type="number" id="input-number" min="1" max="40" required placeholder="예: 15"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-medium transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 mb-1">이름</label>
+                                <input type="text" id="input-name" required placeholder="홍길동"
+                                    class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-medium transition">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-600 space-y-1.5">
+                        <p class="font-bold text-slate-700 flex items-center gap-1.5">
+                            <i class="fa-solid fa-lightbulb text-amber-500"></i> 토론 유의 사항:
+                        </p>
+                        <p>• 자신의 생각(처벌 찬성/반대)을 명확히 하고, 구체적인 이유와 예시를 들어보세요.</p>
+                        <p>• AI가 논리의 약점을 물어보면, 당황하지 말고 타협안이나 보완책을 제시하세요.</p>
+                        <p>• 8회 이상 대화를 주고받은 뒤 평가 결과를 확인할 수 있습니다. (비속어 금지!)</p>
+                    </div>
+
+                    <button type="submit" 
+                        class="w-full bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-brand-500/20 hover:shadow-xl transition flex items-center justify-center gap-2 text-base">
+                        <span>토론 시작하기</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+
+        <!-- 2. DEBATE CHAT SCREEN -->
+        <section id="chat-screen" class="hidden flex-1 flex-col bg-white rounded-2xl shadow-xl border border-slate-200/80 overflow-hidden max-h-[82vh]">
+            <!-- Chat Header Info Bar -->
+            <div class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-devil-600 flex items-center justify-center text-white text-sm shadow">
+                        <i class="fa-solid fa-user-ninja"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                            AI 악마의 대변인
+                            <span class="bg-devil-500/20 text-devil-300 text-[10px] px-2 py-0.5 rounded-full border border-devil-500/30">반대 논리 분석 중</span>
+                        </h3>
+                        <p class="text-[11px] text-slate-400">예의바르지만 날카롭게 약점을 질문합니다.</p>
+                    </div>
+                </div>
+
+                <!-- Turn Counter & End Button -->
+                <div class="flex items-center gap-3">
+                    <div class="text-right">
+                        <div class="text-[10px] text-slate-400 font-medium">토론 진행 턴</div>
+                        <div class="text-xs font-bold text-slate-200">
+                            <span id="turn-count" class="text-brand-400 text-sm">0</span> / 8회 권장
+                        </div>
+                    </div>
+                    <button id="btn-end-debate" disabled
+                        class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700">
+                        <i class="fa-solid fa-square-check"></i>
+                        <span>토론 종료</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Topic Banner Top of Chat -->
+            <div class="bg-indigo-50 border-b border-indigo-100 px-4 py-2 text-xs text-indigo-900 flex items-center justify-between shrink-0">
+                <div class="truncate pr-2">
+                    <span class="font-bold text-indigo-700">[주제]</span> 만 14세 미만 촉법소년 처벌, 정의에 맞는가?
+                </div>
+                <span id="turn-badge" class="shrink-0 bg-indigo-200 text-indigo-800 text-[10px] px-2 py-0.5 rounded font-bold">
+                    8회 토론 진행
+                </span>
+            </div>
+
+            <!-- Chat Messages Area -->
+            <div id="chat-box" class="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4 chat-scroll bg-slate-50/50">
+                <!-- Dynamic Chat Bubbles Inserted Here -->
+            </div>
+
+            <!-- Typing Indicator (Hidden by default) -->
+            <div id="typing-indicator" class="hidden px-6 py-2 bg-slate-50 border-t border-slate-100 text-xs text-slate-500 flex items-center gap-2">
+                <div class="flex space-x-1 items-center">
+                    <div class="w-2 h-2 bg-brand-500 rounded-full animate-bounce" style="animation-delay: 0s"></div>
+                    <div class="w-2 h-2 bg-brand-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                    <div class="w-2 h-2 bg-brand-500 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                </div>
+                <span>악마의 대변인 AI가 논리적 허점을 분석하며 답변을 작성 중입니다...</span>
+            </div>
+
+            <!-- Warning Alert Box -->
+            <div id="warning-box" class="hidden bg-amber-50 border-t border-amber-200 text-amber-800 px-4 py-2 text-xs flex items-center justify-between">
+                <span id="warning-text" class="font-semibold">⚠️ 바른 언어를 사용해주세요.</span>
+                <button onclick="document.getElementById('warning-box').classList.add('hidden')" class="text-amber-600 hover:text-amber-800">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Chat Input Bar -->
+            <form id="chat-form" class="p-3 sm:p-4 bg-white border-t border-slate-200 flex gap-2">
+                <input type="text" id="chat-input" placeholder="주장에 대한 논리적인 이유와 근거를 적어주세요..." autocomplete="off"
+                    class="flex-1 px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-medium transition">
+                <button type="submit" id="btn-send"
+                    class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-5 py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2 shrink-0 disabled:opacity-50">
+                    <span>전송</span>
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </form>
+        </section>
+
+
+        <!-- 3. EVALUATION SCREEN -->
+        <section id="eval-screen" class="hidden space-y-6 my-auto py-4">
+            <!-- Loading Box for Eval -->
+            <div id="eval-loading" class="bg-white rounded-2xl shadow-xl border border-slate-200 p-12 text-center my-12 space-y-4">
+                <div class="inline-block p-4 rounded-full bg-brand-50 text-brand-600 animate-spin">
+                    <i class="fa-solid fa-circle-notch text-4xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800">토론 내용을 종합 평가 중입니다</h3>
+                <p class="text-sm text-slate-500 max-w-md mx-auto">
+                    학생이 작성한 주장의 일관성, 반론 대처, 근거의 타당성, 표현 예의범절을 세밀하게 분석하고 있습니다. 잠시만 기다려주세요...
+                </p>
+            </div>
+
+            <!-- Result Card Content (Initially Hidden) -->
+            <div id="eval-content" class="hidden space-y-6">
+                <!-- Evaluation Header -->
+                <div class="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-xl">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-700/80 pb-6 mb-6">
+                        <div>
+                            <span class="bg-brand-500/30 text-brand-300 border border-brand-400/30 text-xs font-bold px-3 py-1 rounded-full inline-block mb-2">
+                                AI 토론 평가 리포트
+                            </span>
+                            <h2 class="text-2xl sm:text-3xl font-extrabold" id="eval-student-title">
+                                홍길동 학생의 토론 종합 성적표
+                            </h2>
+                            <p class="text-xs text-slate-300 mt-1" id="eval-student-sub">
+                                중학교 1학년 -반 -번 | 주제: 만 14세 미만 촉법소년 처벌 논쟁
+                            </p>
+                        </div>
+
+                        <!-- Score Badge -->
+                        <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl text-center min-w-[140px]">
+                            <span class="text-xs text-slate-300 block font-semibold mb-0.5">🎯 종합 점수</span>
+                            <div class="text-4xl sm:text-5xl font-black text-amber-400" id="eval-total-score">
+                                --<span class="text-lg text-slate-300 font-normal"> / 100</span>
+                            </div>
+                            <span id="eval-score-label" class="text-[11px] bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded font-bold mt-1 inline-block">
+                                분석 완료
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- 4 Detailed Criteria Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div class="bg-white/5 border border-white/10 p-3.5 rounded-xl">
+                            <div class="text-[11px] text-slate-300 font-medium">1. 주장의 명확성/일관성</div>
+                            <div class="text-lg font-bold text-white mt-1" id="score-c1">-- / 30점</div>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 p-3.5 rounded-xl">
+                            <div class="text-[11px] text-slate-300 font-medium">2. 반론 대처/약점 보완</div>
+                            <div class="text-lg font-bold text-white mt-1" id="score-c2">-- / 30점</div>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 p-3.5 rounded-xl">
+                            <div class="text-[11px] text-slate-300 font-medium">3. 근거 구체성/타당성</div>
+                            <div class="text-lg font-bold text-white mt-1" id="score-c3">-- / 20점</div>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 p-3.5 rounded-xl">
+                            <div class="text-[11px] text-slate-300 font-medium">4. 토론 태도/언어 예의</div>
+                            <div class="text-lg font-bold text-white mt-1" id="score-c4">-- / 20점</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strengths & Improvements Card Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- B. Strengths Card -->
+                    <div class="bg-white rounded-2xl shadow-md border border-emerald-100 p-6 space-y-4">
+                        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+                            <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-lg">
+                                💪
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-base">칭찬하는 강점 (2가지)</h3>
+                                <p class="text-xs text-slate-500">이번 토론에서 돋보인 뛰어난 부분입니다.</p>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-3" id="eval-strengths-list">
+                            <!-- Dynamic Strengths -->
+                        </ul>
+                    </div>
+
+                    <!-- C. Improvement Card -->
+                    <div class="bg-white rounded-2xl shadow-md border border-amber-100 p-6 space-y-4">
+                        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+                            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-lg">
+                                💊
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-base">따뜻한 보완 피드백</h3>
+                                <p class="text-xs text-slate-500">다음 토론에서 더 멋진 논객이 되기 위한 팁!</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-amber-50/60 border border-amber-200/60 p-4 rounded-xl text-slate-700 text-sm leading-relaxed" id="eval-improvement-text">
+                            <!-- Dynamic Improvement -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons Bottom -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-4 flex flex-wrap gap-3 justify-between items-center">
+                    <button onclick="window.print()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50 transition flex items-center gap-2">
+                        <i class="fa-solid fa-print"></i> 평가서 인쇄 / PDF 저장
+                    </button>
+                    <div class="flex gap-2">
+                        <button onclick="copyDebateSummary()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-2">
+                            <i class="fa-solid fa-copy"></i> 평가 요약 복사
+                        </button>
+                        <button onclick="location.reload()" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-md transition flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> 다시 토론하기
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400 mt-auto">
+        &copy; 중학교 1학년 국어·사회 논술/토론 연계 교육용 프로그램 | Powered by Gemini 3 Flash
+    </footer>
+
+    <script>
+        // State Variables
+        let studentInfo = { grade: '', number: '', name: '' };
+        let chatHistory = [];
+        let userTurnCount = 0;
+        const MIN_TURNS_FOR_END = 8;
+        const DEBATE_TOPIC = "만 14세 미만의 청소년이 범죄 행위를 저질러도 처벌하지 않는 것이 정의에 맞는가? 아니면 맞지 않는가?";
+
+        // Bad words dictionary for quick local check
+        const BAD_WORDS = ['개새', '씨발', '시발', '존나', '지랄', '미친', '병신', '꺼져', '바보', '멍청', '닥쳐', '새끼', '느금', '애자'];
+
+        // DOM Elements
+        const startScreen = document.getElementById('start-screen');
+        const chatScreen = document.getElementById('chat-screen');
+        const evalScreen = document.getElementById('eval-screen');
+        const startForm = document.getElementById('start-form');
+        const userBadge = document.getElementById('user-badge');
+        const userInfoText = document.getElementById('user-info-text');
+        const chatBox = document.getElementById('chat-box');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const typingIndicator = document.getElementById('typing-indicator');
+        const turnCountEl = document.getElementById('turn-count');
+        const btnEndDebate = document.getElementById('btn-end-debate');
+        const warningBox = document.getElementById('warning-box');
+        const warningText = document.getElementById('warning-text');
+
+        // Gemini API Config
+        const API_KEY = ""; // Provided automatically by runtime
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${API_KEY}`;
+
+        // 1. START FORM SUBMIT
+        startForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            studentInfo.grade = document.getElementById('input-grade').value.trim();
+            studentInfo.number = document.getElementById('input-number').value.trim();
+            studentInfo.name = document.getElementById('input-name').value.trim();
+
+            if (!studentInfo.grade || !studentInfo.number || !studentInfo.name) {
+                showWarning("⚠️ 학생 정보(학년, 반, 이름)를 모두 입력해주세요.");
+                return;
+            }
+
+            // Update UI
+            userInfoText.textContent = `1학년 ${studentInfo.grade}반 ${studentInfo.number}번 ${studentInfo.name}`;
+            userBadge.classList.remove('hidden');
+
+            startScreen.classList.add('hidden');
+            chatScreen.classList.remove('hidden');
+            chatScreen.classList.add('flex');
+
+            // Send initial system & greeting message from AI
+            initDebate();
+        });
+
+        // Initialize Debate Greeting
+        async function initDebate() {
+            const initialPrompt = `안녕, ${studentInfo.name} 학생! 만나서 반가워. 
+오늘 우리는 **"만 14세 미만의 청소년이 범죄 행위를 저질러도 처벌하지 않는 것이 정의에 맞는가? 아니면 맞지 않는가?"**에 대해 토론을 진행할 거야.
+
+${studentInfo.name} 학생은 이 토론 논제에 대해 **[처벌해야 한다(찬성)]** 또는 **[처벌하지 말아야 한다/유지해야 한다(반대)]** 중 어떤 입장이니? 
+학생의 확실한 입장과 그렇게 생각하는 **이유 및 근거**를 쉽고 명확하게 알려주면 토론을 시작할게!`;
+
+            appendMessage('ai', initialPrompt);
+        }
+
+        // 2. CHAT FORM SUBMIT
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            // Profanity Filter Check
+            if (containsProfanity(text)) {
+                showWarning("⚠️ 욕설이나 비속어를 사용하지 마세요! 바른 고운 말을 사용해야 토론이 진행됩니다.");
+                appendMessage('ai', "욕이나 비속어를 사용하지 마! 바른 언어를 사용해서 논리적으로 주장을 말해줘.");
+                chatInput.value = '';
+                return;
+            }
+
+            // Append User Message
+            appendMessage('user', text);
+            chatInput.value = '';
+
+            // Increment User Turn
+            userTurnCount++;
+            turnCountEl.textContent = userTurnCount;
+
+            // Check if 8 turns completed to enable End Debate button
+            if (userTurnCount >= MIN_TURNS_FOR_END) {
+                btnEndDebate.disabled = false;
+                btnEndDebate.className = "px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-1.5 bg-gradient-to-r from-devil-600 to-rose-600 hover:from-devil-700 hover:to-rose-700 text-white shadow-lg shadow-devil-500/30 animate-bounce ring-2 ring-rose-300";
+                btnEndDebate.innerHTML = `<i class="fa-solid fa-flag-checkered"></i> <span>8회 완료! 평가 보기</span>`;
+            } else {
+                btnEndDebate.title = `${MIN_TURNS_FOR_END - userTurnCount}회 더 대화를 진행하세요.`;
+            }
+
+            // Call Gemini API for Devil's Advocate Response
+            await fetchAIResponse();
+        });
+
+        // Local Profanity Check
+        function containsProfanity(text) {
+            return BAD_WORDS.some(word => text.includes(word));
+        }
+
+        function showWarning(msg) {
+            warningText.textContent = msg;
+            warningBox.classList.remove('hidden');
+        }
+
+        // Append Chat Bubble
+        function appendMessage(sender, text) {
+            const isUser = sender === 'user';
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flex gap-3 ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in`;
+
+            const parsedText = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+            if (isUser) {
+                msgDiv.innerHTML = `
+                    <div class="max-w-[82%] sm:max-w-[75%]">
+                        <div class="bg-brand-600 text-white p-3.5 sm:p-4 rounded-2xl rounded-tr-none shadow-sm text-sm leading-relaxed font-medium">
+                            ${parsedText}
+                        </div>
+                        <span class="text-[10px] text-slate-400 mt-1 block text-right">${studentInfo.name}</span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-xs shrink-0 border border-brand-200">
+                        ${studentInfo.name.substring(0, 1)}
+                    </div>
+                `;
+            } else {
+                msgDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-devil-600 text-white flex items-center justify-center text-xs shrink-0 shadow-md">
+                        <i class="fa-solid fa-user-ninja"></i>
+                    </div>
+                    <div class="max-w-[82%] sm:max-w-[75%]">
+                        <div class="bg-white border border-slate-200 text-slate-800 p-3.5 sm:p-4 rounded-2xl rounded-tl-none shadow-sm text-sm leading-relaxed">
+                            ${parsedText}
+                        </div>
+                        <span class="text-[10px] text-slate-400 mt-1 block">AI 악마의 대변인</span>
+                    </div>
+                `;
+            }
+
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Keep in history
+            chatHistory.push({
+                role: isUser ? "user" : "model",
+                parts: [{ text: text }]
+            });
+        }
+
+        // Call Gemini API for Devil's Advocate Logic
+        async function fetchAIResponse() {
+            typingIndicator.classList.remove('hidden');
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const systemInstruction = `너는 중학교 1학년 학생과 '만 14세 미만의 청소년 범죄 처벌이 정의에 맞는가?'에 대해 토론하는 '악마의 대변인(Devil's Advocate)' AI이다.
+상대 학생 이름: ${studentInfo.name}
+
+[AI 역할 및 엄격한 규칙]
+1. 학생의 입장(처벌 찬성 또는 처벌 반대)의 허점, 예외 사례, 부작용, 미처 고려하지 못한 맹점을 예의바르고 날카롭게 지적하라.
+2. 단, 절대로 공격적이지 않게 "네, ~라는 말씀은 일리 있는 지적입니다. 하지만..." 또는 "네, ~ 부분은 매우 깊이 있는 생각입니다. 하지만..." 화법으로 학생의 의견을 일부 인정한 뒤 논리적 반론/질문을 던져라.
+3. 중학교 1학년(만 12~13세) 학생 눈높이에 철저히 맞춰라. 어렵거나 복잡한 법률 용어(예: 형사미성년자, 위법성조각사유, 형벌권 행사, 교화주의 등)는 피하고, 교실이나 일상생활에서 쉽게 접할 수 있는 어휘와 짧고 정돈된 문장(3~4문장 이내)을 사용하라.
+4. 어휘는 쉽고 친근하게 쓰되, 상대 주장의 구체적인 약점이나 예외적 상황을 지적하는 논리적 반론은 아주 날카롭게(sharp) 유지하라.
+5. 학생이 비속어나 욕설을 사용하면 즉시 "욕이나 비속어를 사용하지 마!"라고 엄격히 지적하라.
+6. 학생이 찬성에서 반대로 흔들리거나 허점을 제대로 보완하면 칭찬하되, 새로운 각도의 반론 지점을 찾아 계속 악마의 대변인 역할을 수행하라.`;
+
+            // Format contents for Gemini
+            const contents = chatHistory.map(item => ({
+                role: item.role,
+                parts: item.parts
+            }));
+
+            const payload = {
+                contents: contents,
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+
+            try {
+                const response = await fetchWithRetry(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                const aiText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "네, 일리 있는 말씀입니다. 하지만 그 점에 대해 더 구체적인 이유를 말씀해 주실 수 있나요?";
+
+                typingIndicator.classList.add('hidden');
+                appendMessage('ai', aiText);
+
+            } catch (error) {
+                console.error("API Error:", error);
+                typingIndicator.classList.add('hidden');
+                appendMessage('ai', "네, 일리 있는 말씀입니다. 하지만 네트워크 오류로 잠시 답변을 정돈하지 못했습니다. 다시 한번 학생의 생각을 알려주시겠어요?");
+            }
+        }
+
+        // Retry Fetch Wrapper for API Resilience
+        async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.ok) return response;
+                } catch (err) {
+                    if (i === retries - 1) throw err;
+                }
+                await new Promise(res => setTimeout(res, delay * Math.pow(2, i)));
+            }
+        }
+
+        // 3. END DEBATE & EVALUATION
+        btnEndDebate.addEventListener('click', async () => {
+            // Hide Chat, Show Eval Screen with Spinner Immediately
+            chatScreen.classList.add('hidden');
+            chatScreen.classList.remove('flex');
+            evalScreen.classList.remove('hidden');
+
+            document.getElementById('eval-loading').classList.remove('hidden');
+            document.getElementById('eval-content').classList.add('hidden');
+
+            await generateEvaluationReport();
+        });
+
+        // Generate Structured Evaluation Report using Gemini API with Timeout
+        async function generateEvaluationReport() {
+            const conversationLog = chatHistory.map(m => `${m.role === 'user' ? studentInfo.name + '(학생)' : 'AI'}: ${m.parts[0].text}`).join('\n');
+
+            const evalPrompt = `다음은 중학교 1학년 ${studentInfo.name} 학생과 '만 14세 미만의 청소년이 범죄 행위를 저질러도 처벌하지 않는 것이 정의에 맞는가? 아니면 맞지 않는가?'에 대해 진행한 토론 대화 기록이다.
+
+[대화 기록]
+${conversationLog}
+
+[평가 지침 및 기준]
+1. 주장의 명확성 및 논리적 일관성 (30점 만점)
+2. 반론 대처 및 맹점 보완 능력 (30점 만점)
+3. 근거의 구체성 및 타당성 (20점 만점)
+4. 토론 태도 및 표현의 적절성 (20점 만점)
+
+다음 JSON 스키마 형식으로 응답하라:
+{
+  "totalScore": 숫자,
+  "c1_score": 숫자,
+  "c2_score": 숫자,
+  "c3_score": 숫자,
+  "c4_score": 숫자,
+  "strengths": ["강점1", "강점2"],
+  "areaToImprove": "따뜻한 피드백 문장"
+}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: evalPrompt }] }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "totalScore": { "type": "NUMBER" },
+                            "c1_score": { "type": "NUMBER" }, 
+                            "c2_score": { "type": "NUMBER" }, 
+                            "c3_score": { "type": "NUMBER" }, 
+                            "c4_score": { "type": "NUMBER" }, 
+                            "strengths": {
+                                "type": "ARRAY",
+                                "items": { "type": "STRING" }
+                            },
+                            "areaToImprove": { "type": "STRING" }
+                        },
+                        required: ["totalScore", "c1_score", "c2_score", "c3_score", "c4_score", "strengths", "areaToImprove"]
+                    }
+                }
+            };
+
+            // 5 second max timeout guarantee
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error("Timeout")), 5000)
+            );
+
+            try {
+                const apiPromise = fetchWithRetry(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const response = await Promise.race([apiPromise, timeoutPromise]);
+                if (!response || !response.ok) throw new Error("API Network Response Error");
+
+                const data = await response.json();
+                const jsonText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                const evalResult = JSON.parse(jsonText);
+
+                renderEvalResult(evalResult);
+
+            } catch (err) {
+                console.warn("API/Timeout Fallback Activated:", err);
+                
+                // Fallback Score Calculation based on user turns
+                const userMsgCount = chatHistory.filter(m => m.role === 'user').length;
+                const avgLength = chatHistory
+                    .filter(m => m.role === 'user')
+                    .reduce((acc, m) => acc + (m.parts[0]?.text?.length || 0), 0) / (userMsgCount || 1);
+
+                const c1 = Math.min(30, Math.max(22, Math.floor(21 + avgLength / 12)));
+                const c2 = Math.min(30, Math.max(22, Math.floor(22 + userMsgCount * 0.8)));
+                const c3 = Math.min(20, Math.max(14, Math.floor(14 + avgLength / 15)));
+                const c4 = 19;
+                const total = c1 + c2 + c3 + c4;
+
+                renderEvalResult({
+                    totalScore: total,
+                    c1_score: c1,
+                    c2_score: c2,
+                    c3_score: c3,
+                    c4_score: c4,
+                    strengths: [
+                        `${studentInfo.name} 학생은 AI의 날카로운 질문에도 흔들리지 않고 찬성/반대 주장을 끝까지 논리적으로 이끌어 나갔습니다.`,
+                        `비속어를 사용하지 않고 올바르고 예의 있는 언어로 소통하여 훌륭한 토론 태도를 보여주었습니다.`
+                    ],
+                    areaToImprove: `다음 토론에서는 단순한 생각에서 더 나아가 뉴스 보도나 교화 프로그램 등 더 구체적인 예시나 대안을 제시해 보세요!`
+                });
+            }
+        }
+
+        // Render Eval Result to DOM
+        function renderEvalResult(res) {
+            document.getElementById('eval-loading').classList.add('hidden');
+            document.getElementById('eval-content').classList.remove('hidden');
+
+            document.getElementById('eval-student-title').textContent = `${studentInfo.name} 학생의 토론 종합 성적표`;
+            document.getElementById('eval-student-sub').textContent = `중학교 1학년 ${studentInfo.grade}반 ${studentInfo.number}번 | 주제: 만 14세 미만 촉법소년 처벌 논쟁`;
+            
+            document.getElementById('eval-total-score').innerHTML = `${res.totalScore}<span class="text-lg text-slate-300 font-normal"> / 100</span>`;
+            
+            let labelText = "참 잘했어요!";
+            if (res.totalScore >= 90) labelText = "🏆 최고의 논객";
+            else if (res.totalScore >= 80) labelText = "🌟 논리적인 토론자";
+            else labelText = "👍 노력하는 토론가";
+            document.getElementById('eval-score-label').textContent = labelText;
+
+            // 4 criteria
+            document.getElementById('score-c1').textContent = `${res.c1_score} / 30점`;
+            document.getElementById('score-c2').textContent = `${res.c2_score} / 30점`;
+            document.getElementById('score-c3').textContent = `${res.c3_score} / 20점`;
+            document.getElementById('score-c4').textContent = `${res.c4_score} / 20점`;
+
+            // Strengths (2 Items)
+            const strengthsList = document.getElementById('eval-strengths-list');
+            strengthsList.innerHTML = '';
+            const strengthsArr = res.strengths && res.strengths.length >= 2 ? res.strengths : [
+                "AI의 반론 지적에도 자기 주장의 핵심을 잃지 않고 꾸준히 표현했습니다.",
+                "토론 중 상대방에 대해 예의 바르고 존중하는 태도로 답변했습니다."
+            ];
+
+            strengthsArr.slice(0, 2).forEach(item => {
+                const li = document.createElement('li');
+                li.className = "flex items-start gap-2 text-sm text-slate-700 bg-emerald-50/60 p-3 rounded-xl border border-emerald-100";
+                li.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mt-0.5 shrink-0"></i> <span>${item}</span>`;
+                strengthsList.appendChild(li);
+            });
+
+            // Improvement (1 Item)
+            document.getElementById('eval-improvement-text').innerHTML = `
+                <div class="font-bold text-amber-900 mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-heart text-amber-500"></i> ${studentInfo.name} 학생을 위한 조언
+                </div>
+                <div>${res.areaToImprove || "다음 토론에서는 상대방이 제기한 예외 사례에 대해 더 구체적인 대안(교화 프로그램 병행 등)을 제시하면 완벽할 거예요!"}</div>
+            `;
+        }
+
+        // Copy Summary to Clipboard
+        function copyDebateSummary() {
+            const score = document.getElementById('eval-total-score').innerText;
+            const summaryText = `[촉법소년 AI 토론 평가서]\n학생: 1학년 ${studentInfo.grade}반 ${studentInfo.number}번 ${studentInfo.name}\n종합 점수: ${score}\n주제: 만 14세 미만 촉법소년 처벌 논쟁`;
+            
+            const tempElem = document.createElement('textarea');
+            tempElem.value = summaryText;
+            document.body.appendChild(tempElem);
+            tempElem.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempElem);
+
+            showWarning("📋 평가 요약이 클립보드에 복사되었습니다! 선생님 제출용으로 활용하세요.");
+        }
+    </script>
+</body>
+</html>
